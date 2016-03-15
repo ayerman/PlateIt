@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use yii\db\mssql\PDO;
+
 class User extends \yii\base\Object implements \yii\web\IdentityInterface
 {
     public $id;
@@ -10,29 +12,23 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     public $authKey;
     public $accessToken;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
     /**
      * @inheritdoc
      */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        $pdo = new PDO("mysql:host=localhost;dbname=test", "", "");
+        $sql = "select * from users where id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $id);
+        $stmt->execute();
+        while ($row = $stmt->fetch()){
+            return new static(['id' => $row['id'],
+                'username' => $row['username'],
+                'password' => $row['password'],
+                'authKey' => 'test'.$row['id'].'key',
+                'accessToken' => $row['id'].'-token']);
+        }
     }
 
     /**
@@ -40,12 +36,18 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
+        $pdo = new PDO("mysql:host=localhost;dbname=test", "", "");
+        $sql = "select * from users where accesskey = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $token);
+        $stmt->execute();
+        while ($row = $stmt->fetch()){
+            return new static(['id' => $row['id'],
+                'username' => $row['username'],
+                'password' => $row['password'],
+                'authKey' => 'test'.$row['id'].'key',
+                'accessToken' => $row['id'].'-token']);
         }
-
         return null;
     }
 
@@ -57,12 +59,18 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
+        $pdo = new PDO("mysql:host=localhost;dbname=test", "", "");
+        $sql = "select * from users where username = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $username);
+        $stmt->execute();
+        while ($row = $stmt->fetch()){
+            return new static(['id' => $row['id'],
+                                'username' => $row['username'],
+                                'password' => $row['password'],
+                                'authKey' => 'test'.$row['id'].'key',
+                                'accessToken' => $row['id'].'-token']);
         }
-
         return null;
     }
 

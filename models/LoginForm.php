@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\db\mssql\PDO;
 
 /**
  * LoginForm is the model behind the login form.
@@ -60,6 +61,22 @@ class LoginForm extends Model
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
         return false;
+    }
+
+    public function register(){
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=test", "", "");
+            $sql = "INSERT INTO users(username, password)
+                VALUES (?,?)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(1, $this->username);
+            $stmt->bindValue(2, $this->password);
+            $stmt->execute();
+            return true;
+        }
+        catch(\PDOException $ex){
+            return false;
+        }
     }
 
     /**
