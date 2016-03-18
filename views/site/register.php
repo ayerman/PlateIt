@@ -27,10 +27,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'password')->passwordInput() ?>
 
+    <?= $form->field($model, 'address')->textInput() ?>
+
+    <?= $form->field($model, 'phonenumber')->textInput() ?>
+
+    <?= $form->field($model, 'email')->textInput() ?>
+
+    <?= $form->field($model, 'type')->dropDownList(["Retail","Consumer"]) ?>
+
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton('Register', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+            <?= Html::submitButton('Register', ['class' => 'btn btn-primary', 'name' => 'register-button']) ?>
         </div>
     </div>
 

@@ -17,7 +17,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-        $pdo = new PDO("mysql:host=localhost;dbname=test", "", "");
+        $pdo = new PDO("mysql:host=198.71.227.86;dbname=PlateIt", "PlateIt", "Webprog2");
         $sql = "select * from users where id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $id);
@@ -36,7 +36,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        $pdo = new PDO("mysql:host=localhost;dbname=test", "", "");
+        $pdo = new PDO("mysql:host=198.71.227.86;dbname=PlateIt", "PlateIt", "Webprog2");
         $sql = "select * from users where accesskey = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $token);
@@ -59,7 +59,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        $pdo = new PDO("mysql:host=localhost;dbname=test", "", "");
+        $pdo = new PDO("mysql:host=198.71.227.86:3306;dbname=PlateIt", "PlateIt", "Webprog2");
         $sql = "select * from users where username = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $username);
