@@ -3,6 +3,8 @@
 namespace app\models;
 
 use yii\db\mssql\PDO;
+include 'dbconfig.php';
+include 'DBConnectionHelper.php';
 
 class User extends \yii\base\Object implements \yii\web\IdentityInterface
 {
@@ -17,8 +19,8 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-        $pdo = new PDO("mysql:host=198.71.227.86;dbname=PlateIt", "PlateIt", "Webprog2");
-        $sql = "select * from users where id = ?";
+        $pdo = DBConnectionHelper::getDBConnection();
+        $sql = "select * from Users where id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $id);
         $stmt->execute();
@@ -36,8 +38,8 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        $pdo = new PDO("mysql:host=198.71.227.86;dbname=PlateIt", "PlateIt", "Webprog2");
-        $sql = "select * from users where accesskey = ?";
+        $pdo = DBConnectionHelper::getDBConnection();
+        $sql = "select * from Users where accesskey = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $token);
         $stmt->execute();
@@ -59,8 +61,8 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        $pdo = new PDO("mysql:host=198.71.227.86:3306;dbname=PlateIt", "PlateIt", "Webprog2");
-        $sql = "select * from users where username = ?";
+        $pdo = DBConnectionHelper::getDBConnection();
+        $sql = "select * from Users where username = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $username);
         $stmt->execute();
