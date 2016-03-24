@@ -5,8 +5,7 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\db\mssql\PDO;
-include 'dbconfig.php';
-include 'DBConnectionHelper.php';
+require_once('DBConnectionHelper.php');
 
 /**
  * LoginForm is the model behind the login form.
@@ -72,7 +71,7 @@ class LoginForm extends Model
     public function register(){
         try {
             $pdo = DBConnectionHelper::getDBConnection();
-            $sql = "INSERT INTO `Users`(`username`, `password`) VALUES (?,?);";
+            $sql = "INSERT INTO users(username, password) VALUES (?,?);";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(1, $this->username);
             $stmt->bindValue(2, $this->password);

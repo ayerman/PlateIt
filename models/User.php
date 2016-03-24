@@ -3,8 +3,7 @@
 namespace app\models;
 
 use yii\db\mssql\PDO;
-include 'dbconfig.php';
-include 'DBConnectionHelper.php';
+require_once('DBConnectionHelper.php');
 
 class User extends \yii\base\Object implements \yii\web\IdentityInterface
 {
@@ -20,7 +19,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     public static function findIdentity($id)
     {
         $pdo = DBConnectionHelper::getDBConnection();
-        $sql = "select * from Users where id = ?";
+        $sql = "select * from users where id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $id);
         $stmt->execute();
@@ -39,7 +38,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     public static function findIdentityByAccessToken($token, $type = null)
     {
         $pdo = DBConnectionHelper::getDBConnection();
-        $sql = "select * from Users where accesskey = ?";
+        $sql = "select * from users where accesskey = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $token);
         $stmt->execute();
@@ -62,7 +61,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     public static function findByUsername($username)
     {
         $pdo = DBConnectionHelper::getDBConnection();
-        $sql = "select * from Users where username = ?";
+        $sql = "select * from users where username = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $username);
         $stmt->execute();

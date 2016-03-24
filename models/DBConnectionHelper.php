@@ -7,7 +7,8 @@
  */
 
 namespace app\models;
-include 'dbconfig.php';
+use yii\db\mssql\PDO;
+require_once('dbconfig.php');
 
 
 class DBConnectionHelper
