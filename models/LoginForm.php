@@ -71,14 +71,14 @@ class LoginForm extends Model
     public function register(){
         try {
             $pdo = DBConnectionHelper::getDBConnection();
-            $sql = "INSERT INTO users(username, password) VALUES (?,?);";
+            $sql = "INSERT INTO users(username, password, address, phonenumber, email, usertype) VALUES (?,?,?,?,?,?);";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(1, $this->username);
             $stmt->bindValue(2, $this->password);
- //           $stmt->bindValue(3, $this->address);
- //           $stmt->bindValue(4, $this->phonenumber);
- //           $stmt->bindValue(5, $this->email);
- //           $stmt->bindValue(6, $this->type);
+            $stmt->bindValue(3, $this->address);
+            $stmt->bindValue(4, $this->phonenumber);
+            $stmt->bindValue(5, $this->email);
+            $stmt->bindValue(6, $this->type);
             $stmt->execute();
             return true;
         }

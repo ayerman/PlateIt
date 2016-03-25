@@ -60,7 +60,12 @@ class SiteController extends Controller
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['isLogin'])) {
                 if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                    return $this->goBack();
+                    if($model->type == "Consumer") {
+                        return $this->redirect(array('site/restaurants'));
+                    }
+                    else{
+                        return $this->redirect(array('site/review'));
+                    }
                 }
             }
         }
@@ -68,6 +73,16 @@ class SiteController extends Controller
         return $this->render('login', [
             'model' => $model,
         ]);
+    }
+
+    public function actionRestaurants()
+    {
+        return $this->render('restaurants');
+    }
+
+    public function actionReview()
+    {
+        return $this->render('review');
     }
 
     public function actionRegister()
@@ -80,7 +95,12 @@ class SiteController extends Controller
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($model->load(Yii::$app->request->post()) && $model->register()) {
                 $model->login();
-                return $this->goBack();
+                if($model->type == "Consumer") {
+                    return $this->redirect(array('site/restaurants'));
+                }
+                else{
+                    return $this->redirect(array('site/review'));
+                }
             }
         }
 

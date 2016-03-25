@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'PlateIt - Home';
+$this->title = 'PlateIt - Restaurants';
 ?>
 <div class="site-index">
 
