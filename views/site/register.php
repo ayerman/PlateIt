@@ -23,6 +23,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'labelOptions' => ['class' => 'col-lg-1 control-label'],
         ],
     ]); ?>
+	<?php if(Yii::$app->session->hasFlash('userExists')):?>
+    <div class="alert alert-danger">
+        <?php echo Yii::$app->session->getFlash('userExists');?>
+    </div>
+	<?php endif; ?>
     <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
     <?= $form->field($model, 'password')->passwordInput() ?>
@@ -33,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'email')->textInput() ?>
 
-    <?= $form->field($model, 'type')->dropDownList(["Retail","Consumer"]) ?>
+    <?= $form->field($model, 'usertype')->dropDownList(["Retail"=>"Retail","Consumer"=>"Consumer"]) ?>
 
 
     <div class="form-group">

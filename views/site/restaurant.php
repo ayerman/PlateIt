@@ -2,12 +2,12 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'PlateIt - Restaurants';
+$this->title = 'PlateIt - Restaurant';
 ?>
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>PlateIt!</h1>
+        <h1>PlateIt! Restaurant</h1>
 
     </div>
 

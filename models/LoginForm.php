@@ -17,11 +17,23 @@ class LoginForm extends Model
     public $address;
     public $phonenumber;
     public $email;
-    public $type;
+    public $usertype;
     public $rememberMe = true;
 
     private $_user = false;
-
+	
+	function __construct($username){
+		$this->username = $username;
+	}
+	
+	private function fillOutUser($record){
+		$this->username = $record['username'];
+		$this->password = $record['password'];;
+		$this->address = $record['address'];;
+		$this->phonenumber = $record['phonenumber'];;
+		$this->email = $record['email'];;
+		$this->usertype = $record['usertype'];;
+	}
 
     /**
      * @return array the validation rules.
@@ -35,6 +47,14 @@ class LoginForm extends Model
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+			//address is safe to leave null
+            ['address', 'safe'],
+			//phonenumber is safe to leave null
+            ['phonenumber', 'safe'],
+			//email is safe to leave null
+			['email','email'],
+			//usertype is safe to leave null
+			['usertype', 'safe'],
         ];
     }
 
@@ -68,19 +88,43 @@ class LoginForm extends Model
         return false;
     }
 
-    public function register(){
-        try {
+	public function getUserInfo(){
+		try {
             $pdo = DBConnectionHelper::getDBConnection();
-            $sql = "INSERT INTO users(username, password, address, phonenumber, email, usertype) VALUES (?,?,?,?,?,?);";
+            $sql = "select * from users where username = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(1, $this->username);
-            $stmt->bindValue(2, $this->password);
-            $stmt->bindValue(3, $this->address);
-            $stmt->bindValue(4, $this->phonenumber);
-            $stmt->bindValue(5, $this->email);
-            $stmt->bindValue(6, $this->type);
             $stmt->execute();
-            return true;
+			$this->fillOutUser($stmt->fetch());
+        }
+        catch(\PDOException $ex){
+            return $ex->getMessage();
+        }
+	}
+	
+    public function register(){
+        try {
+			//check if user exists
+			$pdo = DBConnectionHelper::getDBConnection();
+            $sql = "select * from users where username = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(1, $this->username);
+            $stmt->execute();
+			
+			if($stmt->rowCount()<=0){
+				//if it doesnt exist create it
+				$sql = "INSERT INTO users(username, password, address, phonenumber, email, usertype) VALUES (?,?,?,?,?,?);";
+				$stmt = $pdo->prepare($sql);
+				$stmt->bindValue(1, $this->username);
+				$stmt->bindValue(2, $this->password);
+				$stmt->bindValue(3, $this->address);
+				$stmt->bindValue(4, $this->phonenumber);
+				$stmt->bindValue(5, $this->email);
+				$stmt->bindValue(6, $this->usertype);
+				$stmt->execute();
+				return true;
+			}
+			return false;
         }
         catch(\PDOException $ex){
             return $ex->getMessage();

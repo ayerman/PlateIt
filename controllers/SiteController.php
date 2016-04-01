@@ -56,16 +56,17 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new LoginForm(null);
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['isLogin'])) {
                 if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                    if($model->type == "Consumer") {
-                        return $this->redirect(array('site/restaurants'));
-                    }
-                    else{
-                        return $this->redirect(array('site/review'));
-                    }
+					$model->getUserInfo();
+					if($model->usertype == "Consumer") {
+						return $this->redirect(array('/site/dashboard'));
+					}
+					else if($model->usertype == "Retail"){
+						return $this->redirect(array('/site/restaurant'));
+					}
                 }
             }
         }
@@ -75,14 +76,21 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionRestaurants()
-    {
-        return $this->render('restaurants');
+    public function actionRestaurant()
+    {	
+        return $this->render('restaurant');
     }
 
-    public function actionReview()
+    public function actionDashboard()
     {
-        return $this->render('review');
+		$model = new LoginForm(Yii::$app->user->identity->username);
+		$model->getUserInfo();
+        if($model->usertype == "Consumer") {
+            return $this->render('dashboard');
+        }
+        else if($model->usertype == "Retail"){
+            return $this->redirect(array('/site/restaurant'));
+        }
     }
 
     public function actionRegister()
@@ -91,17 +99,18 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new LoginForm(null);
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($model->load(Yii::$app->request->post()) && $model->register()) {
                 $model->login();
-                if($model->type == "Consumer") {
-                    return $this->redirect(array('site/restaurants'));
+                if($model->usertype == "Consumer") {
+                    return $this->redirect(array('/site/dashboard'));
                 }
-                else{
-                    return $this->redirect(array('site/review'));
+                else if($model->usertype == "Retail"){
+                    return $this->redirect(array('/site/restaurant'));
                 }
             }
+			Yii::$app->session->setFlash('userExists', "The username that you selected already exists.");
         }
 
         return $this->render('register', [
