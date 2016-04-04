@@ -26,7 +26,7 @@ $this->title = 'PlateIt - Restaurant';
 
 <div>
     <p>
-        <h3>Adress : </h3>
+        <h3>Address : </h3>
         <h3>Phone Number: </h3>
         <h3>Email: </h3>
     </p>

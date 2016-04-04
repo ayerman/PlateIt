@@ -43,11 +43,21 @@ AppAsset::register($this);
             ],
         ]);
     }
-    else{
+    else if(Yii::$app->session['usertype'] != "Retail"){
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/dashboard']],
+                ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout']]
+            ],
+        ]);
+    }
+    else if(Yii::$app->session['usertype'] == "Retail"){
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-right'],
+            'items' => [
+                ['label' => 'Home', 'url' => ['/site/dashboard']],
+                ['label' => 'Add Item', 'url' => ['/site/additem']],
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout']]
             ],
         ]);
