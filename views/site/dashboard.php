@@ -51,61 +51,21 @@ $this->title = 'PlateIt - DashBoard';
 
         <!-- Page Features -->
         <div class="row text-center">
-
+            <?php foreach($model as $item){?>
             <div class="col-md-3 col-sm-6 hero-feature">
                 <div class="thumbnail">
                     <img src="http://placehold.it/800x500" alt="">
                     <div class="caption">
-                        <h3>(Restaurant Name)</h3>
-                        <p></p>
+                        <h3><?php echo $item->name; ?></h3>
+                        <p><?php echo $item->description; ?></p>
                         <p>
-                            <a href="#" class="btn btn-default">Learn More</a>
+                            <a href="/PlateIt/site/restaurant?id=<?php echo $item->userid; ?>" class="btn btn-default">Learn More</a>
                         </p>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-3 col-sm-6 hero-feature">
-                <div class="thumbnail">
-                    <img src="http://placehold.it/800x500" alt="">
-                    <div class="caption">
-                        <h3>(Restaurant Name)</h3>
-                        <p></p>
-                        <p>
-                            <a href="#" class="btn btn-default">Learn More</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 hero-feature">
-                <div class="thumbnail">
-                    <img src="http://placehold.it/800x500" alt="">
-                    <div class="caption">
-                        <h3>(Restaurant Name)</h3>
-                        <p></p>
-                        <p>
-                            <a href="#" class="btn btn-default">Learn More</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 hero-feature">
-                <div class="thumbnail">
-                    <img src="http://placehold.it/800x500" alt="">
-                    <div class="caption">
-                        <h3>(Restaurant Name)</h3>
-                        <p></p>
-                        <p>
-                            <a href="#" class="btn btn-default">Learn More</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
+            <?php } ?>
         </div>
-        <!-- /.row -->
 
         <hr>
 

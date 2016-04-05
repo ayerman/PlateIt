@@ -1,6 +1,8 @@
 <?php
 
 namespace app\controllers;
+include 'BLL/retailDAO.php';
+include 'BLL/itemsDAO.php';
 
 use Yii;
 use yii\filters\AccessControl;
@@ -8,6 +10,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\item;
+use app\models\retail;
 use app\models\ContactForm;
 use yii\web\Session;
 
@@ -57,7 +60,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm(null);
+        $model = new LoginForm();
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['isLogin'])) {
                 if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -67,7 +70,7 @@ class SiteController extends Controller
 						return $this->redirect(array('/site/dashboard'));
 					}
 					else if($model->usertype == "Retail"){
-						return $this->redirect(array('/site/restaurant'));
+						return $this->redirect(array('/site/restaurant?id=' . $model->getUser()->getId()));
 					}
                 }
             }
@@ -81,6 +84,11 @@ class SiteController extends Controller
     public function actionRestaurant()
     {
         $this->validateLogin();
+        if(Yii::$app->request->isGet) {
+            $Retail = getRetail(Yii::$app->request->get("id"));
+            $allItems = getItems($Retail->userid);
+            return $this->render('restaurant', ['retail' => $Retail, 'items' => $allItems,]);
+        }
         return $this->render('restaurant');
     }
 
@@ -88,7 +96,10 @@ class SiteController extends Controller
         $this->validateLogin();
 
         $model = new item();
-        $user = new LoginForm(Yii::$app->user->identity->username);
+
+        //needs work
+        $user = new LoginForm();
+        $user->fromID(Yii::$app->user->identity->getId());
         if($user->usertype == "Consumer") {
             return $this->render('dashboard');
         }
@@ -98,7 +109,7 @@ class SiteController extends Controller
                 $loginUser = Yii::$app->user->getIdentity();
                 $model->userid = $loginUser->getId();
                 $model->createItem();
-                return $this->redirect(array('/site/restaurant'));
+                return $this->redirect(array('/site/restaurant?id=' . $model->userid));
             }
             else{
                 return $this->goHome();
@@ -112,13 +123,15 @@ class SiteController extends Controller
     public function actionDashboard()
     {
         $this->validateLogin();
-		$model = new LoginForm(Yii::$app->user->identity->username);
+		$model = new LoginForm();
+        $model->username = Yii::$app->user->identity->username;
 		$model->getUserInfo();
         if($model->usertype == "Consumer") {
-            return $this->render('dashboard');
+            $allRetail = getAllRetail();
+            return $this->render('dashboard', ['model' => $allRetail,]);
         }
         else if($model->usertype == "Retail"){
-            return $this->redirect(array('/site/restaurant'));
+            return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->identity->getId()));
         }
     }
 
@@ -128,7 +141,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm(null);
+        $model = new LoginForm();
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($model->load(Yii::$app->request->post()) && $model->register()) {
                 $model->login();
@@ -137,7 +150,14 @@ class SiteController extends Controller
                     return $this->redirect(array('/site/dashboard'));
                 }
                 else if($model->usertype == "Retail"){
-                    return $this->redirect(array('/site/restaurant'));
+                    $newRetail = new retail();
+                    $newRetail->userid = Yii::$app->user->getId();
+                    $newRetail->name = $model->username;
+                    $newRetail->address = $model->address;
+                    $newRetail->email = $model->email;
+                    $newRetail->phonenumber = $model->phonenumber;
+                    $newRetail->createRetail();
+                    return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->getId()));
                 }
             }
 			Yii::$app->session->setFlash('userExists', "The username that you selected already exists.");

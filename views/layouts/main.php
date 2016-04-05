@@ -56,7 +56,7 @@ AppAsset::register($this);
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
-                ['label' => 'Home', 'url' => ['/site/dashboard']],
+                ['label' => 'Home', 'url' => ['/site/restaurant?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Add Item', 'url' => ['/site/additem']],
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout']]
             ],

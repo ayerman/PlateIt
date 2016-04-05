@@ -17,15 +17,18 @@ require_once('DBConnectionHelper.php');
 /**
  * LoginForm is the model behind the login form.
  */
-class item extends Model
+class retail extends Model
 {
     public $userid;
     public $name;
     public $description;
     public $image;
+    public $address;
+    public $email;
+    public $phonenumber;
 
-    function __construct(){
-
+    function __construct()
+    {
     }
 
     public function fromRecord($record)
@@ -34,6 +37,9 @@ class item extends Model
         $this->name = $record['name'];
         $this->description = $record['description'];
         $this->image = $record['image'];
+        $this->address = $record['address'];
+        $this->email = $record['email'];
+        $this->phonenumber = $record['phonenumber'];
     }
 
     /**
@@ -43,23 +49,28 @@ class item extends Model
     {
         return [
             // username and password are both required
-            [['name', 'description', 'userid'], 'required'],
+            [['name', 'userid'], 'required'],
+            ['description', 'safe'],
             ['image', 'safe'],
+            ['address', 'safe'],
+            ['email', 'safe'],
+            ['phonenumber', 'safe'],
         ];
     }
 
-
-
-    public function createItem(){
+    public function createRetail(){
         try {
             //check if user exists
             $pdo = DBConnectionHelper::getDBConnection();
-            $sql = "INSERT INTO item(userid, name, description, image) VALUES (?,?,?,?);";
+            $sql = "INSERT INTO retail(userid, name, description, image, address, email, phonenumber) VALUES (?,?,?,?,?,?,?);";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(1, $this->userid);
             $stmt->bindValue(2, $this->name);
             $stmt->bindValue(3, $this->description);
             $stmt->bindValue(4, $this->image);
+            $stmt->bindValue(5, $this->address);
+            $stmt->bindValue(6, $this->email);
+            $stmt->bindValue(7, $this->phonenumber);
             $stmt->execute();
             return;
         }

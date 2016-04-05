@@ -21,9 +21,24 @@ class LoginForm extends Model
     public $rememberMe = true;
 
     private $_user = false;
-	
-	function __construct($username){
-		$this->username = $username;
+
+
+    function __construct()
+    {
+    }
+
+    public function fromID($id){
+        try {
+            $pdo = DBConnectionHelper::getDBConnection();
+            $sql = "select * from users where id = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(1, $id);
+            $stmt->execute();
+            $this->fillOutUser($stmt->fetch());
+        }
+        catch(\PDOException $ex){
+            return $ex->getMessage();
+        }
 	}
 	
 	private function fillOutUser($record){

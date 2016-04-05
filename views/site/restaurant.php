@@ -14,8 +14,8 @@ $this->title = 'PlateIt - Restaurant';
             </div>
             <!-- /.col-md-8 -->
             <div class="col-md-4">
-                <h1>(Name)</h1>
-                <p>Description/genre of establishment</p>
+                <h1><?php echo $retail->name;?></h1>
+                <p><?php echo $retail->description;?></p>
             </div>
             <!-- /.col-md-4 -->
         </div>
@@ -26,9 +26,9 @@ $this->title = 'PlateIt - Restaurant';
 
 <div>
     <p>
-        <h3>Address : </h3>
-        <h3>Phone Number: </h3>
-        <h3>Email: </h3>
+        <h3>Address : <?php echo $retail->address;?></h3>
+        <h3>Phone Number: <?php echo $retail->phonenumber;?></h3>
+        <h3>Email: <?php echo $retail->email;?></h3>
     </p>
 </div>
 
@@ -45,113 +45,20 @@ $this->title = 'PlateIt - Restaurant';
                 </h1>
             </div>
         </div>
-        <!-- /.row -->
 
-        <!-- Dish Row -->
         <div class="row">
+            <?php foreach($items as $item){?>
             <div class="col-md-4 portfolio-item">
                 <a href="#">
                     <img class="img-responsive" src="http://placehold.it/700x400" alt="">
                 </a>
                 <h3>
-                    <a href="#">Dish Name</a>
+                    <a href="#"><?php  echo $item->name; ?></a>
                 </h3>
-                <p>Description of Menu Item</p>
+                <p><?php  echo $item->description; ?></p>
             </div>
-            <div class="col-md-4 portfolio-item">
-                <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dish Name</a>
-                </h3>
-                <p>Description of Menu Item</p>
-            </div>
-            <div class="col-md-4 portfolio-item">
-                <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dish Name</a>
-                </h3>
-                <p>Description of Menu Item</p>
-            </div>
+            <?php } ?>
         </div>
-        <!-- /.row -->
-
-        <!-- Dish Row -->
-        <div class="row">
-            <div class="col-md-4 portfolio-item">
-                <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dish Name</a>
-                </h3>
-                <p>Description of Menu Item</p>
-            </div>
-            <div class="col-md-4 portfolio-item">
-                <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dish Name</a>
-                </h3>
-                <p>Description of Menu Item</p>
-            </div>
-            <div class="col-md-4 portfolio-item">
-                <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dish Name</a>
-                </h3>
-                <p>Description of Menu Item</p>
-            </div>
-        </div>
-
-        <!-- Dish Row -->
-        <div class="row">
-            <div class="col-md-4 portfolio-item">
-                <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dish Name</a>
-                </h3>
-                <p>Description of Menu Item</p>
-            </div>
-            <div class="col-md-4 portfolio-item">
-                <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dish Name</a>
-                </h3>
-                <p>Description of Menu Item</p>
-            </div>
-            <div class="col-md-4 portfolio-item">
-                <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dish Name</a>
-                </h3>
-                <p>Description of Menu Item</p>
-            </div>
-        </div>
-        <!-- /.row -->
-
-
-        <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>  </p>
-                </div>
-            </div>
-            <!-- /.row -->
-        </footer>
 
     </div>
     <!-- /.container -->
