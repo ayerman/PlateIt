@@ -43,7 +43,7 @@ AppAsset::register($this);
             ],
         ]);
     }
-    else if(Yii::$app->session['usertype'] != "Retail"){
+    else if(Yii::$app->session['usertype'] == "Consumer"){
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
@@ -58,6 +58,7 @@ AppAsset::register($this);
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/restaurant?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Add Item', 'url' => ['/site/additem']],
+                ['label' => 'Edit Account', 'url' => ['/site/accountinfo?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout']]
             ],
         ]);

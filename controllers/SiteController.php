@@ -54,6 +54,13 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+    public function actionAccountinfo(){
+        $model = getRetail(Yii::$app->user->getId());
+        return $this->render('accountinfo', [
+            'model' => $model,
+        ]);
+    }
+
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
