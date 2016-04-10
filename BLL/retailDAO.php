@@ -46,7 +46,25 @@ function getRetail($id){
     }
 }
 
-
-
+function updateRetail($retail){
+    try {
+        //check if user exists
+        $pdo = DBConnectionHelper::getDBConnection();
+        $sql = "UPDATE retail SET name=?,image=?,address=?,phonenumber=?,description=?,email=? WHERE userid=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1,$retail->name);
+        $stmt->bindValue(2,$retail->image);
+        $stmt->bindValue(3,$retail->address);
+        $stmt->bindValue(4,$retail->phonenumber);
+        $stmt->bindValue(5,$retail->description);
+        $stmt->bindValue(6,$retail->email);
+        $stmt->bindValue(7,$retail->userid);
+        $stmt->execute();
+        return true;
+    }
+    catch(\PDOException $ex){
+        return $ex->getMessage();
+    }
+}
 
 ?>

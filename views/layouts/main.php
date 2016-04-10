@@ -39,7 +39,7 @@ AppAsset::register($this);
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'Register', 'url' => ['/site/register']],
-                ['label' => 'Login', 'url' => ['/site/login']]
+                ['label' => 'Login', 'url' => ['/site/login']],
             ],
         ]);
     }
@@ -58,7 +58,7 @@ AppAsset::register($this);
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/restaurant?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Add Item', 'url' => ['/site/additem']],
-                ['label' => 'Edit Account', 'url' => ['/site/accountinfo?id=' . Yii::$app->user->identity->getId()]],
+                ['label' => 'Retail Account', 'url' => ['/site/accountinfo?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout']]
             ],
         ]);

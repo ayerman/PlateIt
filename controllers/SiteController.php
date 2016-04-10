@@ -51,11 +51,35 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        if(!Yii::$app->user->isGuest) {
+            $model = new LoginForm();
+            $model->username = Yii::$app->user->identity->username;
+            $model->getUserInfo();
+            if(!isset(Yii::$app->session['usertype'])){
+                $this->identifyUserType($model->usertype);
+            }
+            if ($model->usertype == "Consumer") {
+                return $this->redirect('/PlateIt/site/dashboard');
+            } else if ($model->usertype == "Retail") {
+                return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->identity->getId()));
+            }
+        }
         return $this->render('index');
     }
 
     public function actionAccountinfo(){
-        $model = getRetail(Yii::$app->user->getId());
+        $model = new retail();
+        if(Yii::$app->request->isGet) {
+            $model = getRetail(Yii::$app->request->get('id'));
+        }
+        else {
+            if ($model->load(Yii::$app->request->post())) {
+                $model->userid = Yii::$app->user->getId();
+                if(updateRetail($model)){
+                    Yii::$app->session->setFlash('changeSuccess','You have successfully updated your retail account information');
+                }
+            }
+        }
         return $this->render('accountinfo', [
             'model' => $model,
         ]);
