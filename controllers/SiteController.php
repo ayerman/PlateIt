@@ -3,6 +3,7 @@
 namespace app\controllers;
 include 'BLL/retailDAO.php';
 include 'BLL/itemsDAO.php';
+include 'BLL/userDAO.php';
 
 use Yii;
 use yii\filters\AccessControl;
@@ -84,6 +85,29 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+	
+	public function actionUseraccount(){
+		$model = new LoginForm();
+        if(Yii::$app->request->isGet) {
+            $model->fromID(Yii::$app->request->get('id'));
+        }
+        else {
+            if ($model->load(Yii::$app->request->post())) {
+                if(updateUser($model,Yii::$app->user->getId())){
+					$model->fromID(Yii::$app->user->getId());
+					Yii::$app->user->logout();
+					$this->identifyUserType($model->usertype);
+					$model->login();
+                    Yii::$app->session->setFlash('changeSuccess','You have successfully updated your user account information!');
+                }else{
+					Yii::$app->session->setFlash('changeFail','The username selected currently exists!');
+				}
+            }
+        }
+        return $this->render('useraccount', [
+            'model' => $model,
+        ]);
+	}
 
     public function actionLogin()
     {
@@ -159,7 +183,7 @@ class SiteController extends Controller
 		$model->getUserInfo();
         if($model->usertype == "Consumer") {
             $allRetail = getAllRetail();
-            return $this->render('dashboard', ['model' => $allRetail,]);
+            return $this->render('dashboard', ['model' => $allRetail, 'loginUser' => $model]);
         }
         else if($model->usertype == "Retail"){
             return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->identity->getId()));
@@ -202,6 +226,7 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
+        Yii::$app->session->removeAll();
         return $this->goHome();
     }
 

@@ -16,8 +16,6 @@ $this->title = 'PlateIt - DashBoard';
             <h1>PlateIt</h1>
             <p>Browse and rate restaurants' food and drink items. We encourage you to try new restaurants or dishes, maybe you will find a new favorite!
             </p>
-            <p><a class="btn btn-primary btn-large">Discover Now!</a>
-            </p>
         </header>
 
         <hr>
@@ -32,9 +30,10 @@ $this->title = 'PlateIt - DashBoard';
     </div>
     <div id="collapse1" class="panel-collapse collapse">
       <div class="panel-body">
-        <p><h4>Name : </h4></p>
-        <p><h4>Email : </h4></p>
-        <p><h4>Phone Number : </h4></p>
+        <p><h4>Name : <?php echo $loginUser->username; ?></h4></p>
+        <p><h4>Email : <?php echo $loginUser->email; ?></h4></p>
+        <p><h4>Address : <?php echo $loginUser->address; ?></h4></p>
+        <p><h4>Phone Number : <?php echo $loginUser->phonenumber; ?></h4></p>
       </div>
       <div class="panel-footer"></div>
     </div>

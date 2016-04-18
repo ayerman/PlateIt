@@ -48,6 +48,7 @@ AppAsset::register($this);
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/dashboard']],
+                ['label' => 'Account', 'url' => ['/site/useraccount?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout']]
             ],
         ]);
@@ -58,6 +59,7 @@ AppAsset::register($this);
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/restaurant?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Add Item', 'url' => ['/site/additem']],
+                ['label' => 'User Account', 'url' => ['/site/useraccount?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Retail Account', 'url' => ['/site/accountinfo?id=' . Yii::$app->user->identity->getId()]],
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout']]
             ],

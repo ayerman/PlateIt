@@ -5,11 +5,11 @@
 $this->title = 'PlateIt - Home';
 ?>
 <div class="site-index">
-
-    <div class="jumbotron">
-        <h1>PlateIt!</h1>
-
-    </div>
+	<div class="container">
+		<div class="jumbotron">
+			<img src="<?php echo Yii::$app->basePath;?>/Content/plateitLogo.png" />
+		</div>
+	</div>
 
     <div class="body-content">
 
