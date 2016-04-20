@@ -19,6 +19,7 @@ require_once('DBConnectionHelper.php');
  */
 class item extends Model
 {
+	public $id;
     public $userid;
     public $name;
     public $description;
@@ -30,6 +31,7 @@ class item extends Model
 
     public function fromRecord($record)
     {
+        $this->id = $record['id'];
         $this->userid = $record['userid'];
         $this->name = $record['name'];
         $this->description = $record['description'];
@@ -43,7 +45,7 @@ class item extends Model
     {
         return [
             // username and password are both required
-            [['name', 'description', 'userid'], 'required'],
+            [['name', 'description', 'userid','id'], 'required'],
             ['image', 'safe'],
         ];
     }

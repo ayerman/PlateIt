@@ -30,4 +30,23 @@ function getItems($id){
     }
 }
 
+function getItem($menuid){
+    try {
+        //check if user exists
+        $pdo = DBConnectionHelper::getDBConnection();
+        $sql = "select * from item where id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1,$menuid);
+        $stmt->execute();
+        $Item = new item();
+        while($row = $stmt->fetch()){
+            $Item->fromRecord($row);
+        }
+        return $Item;
+    }
+    catch(\PDOException $ex){
+        return $ex->getMessage();
+    }
+}
+
 ?>

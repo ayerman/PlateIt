@@ -67,8 +67,35 @@ class SiteController extends Controller
         }
         return $this->render('index');
     }
+	
+	public function actionMenuitem(){
+        $this->validateLogin();
+		$model = new item();
+        $loginUser = new LoginForm();
+        $loginUser->username = Yii::$app->user->identity->username;
+        $loginUser->getUserInfo();
+		$user = ['name' => $loginUser->username,'userid' => Yii::$app->user->getId()];
+		if($loginUser->usertype == "Retail"){
+			$loginUser = new retail();
+			$loginUser = getRetail(Yii::$app->user->getId());
+			$user = ['name' => $loginUser->name,'userid' => Yii::$app->user->getId()];
+		}
+        if(isset($_GET['id'])) {
+			$model = getItem(Yii::$app->request->get('id'));
+		}
+		
+		if(Yii::$app->request->isPost){
+			
+		}
+		$comments = array();
+        return $this->render('menuitem', [
+            'item' => $model, 'comments' => $comments, 'user' => $user,
+        ]);
+	}
 
     public function actionAccountinfo(){
+		
+        $this->validateLogin();
         $model = new retail();
         if(Yii::$app->request->isGet) {
             $model = getRetail(Yii::$app->request->get('id'));
@@ -87,6 +114,8 @@ class SiteController extends Controller
     }
 	
 	public function actionUseraccount(){
+		
+        $this->validateLogin();
 		$model = new LoginForm();
         if(Yii::$app->request->isGet) {
             $model->fromID(Yii::$app->request->get('id'));
@@ -111,7 +140,7 @@ class SiteController extends Controller
 
     public function actionLogin()
     {
-        if (!\Yii::$app->user->isGuest) {
+        if (!(Yii::$app->user->isGuest)) {
             return $this->goHome();
         }
 
@@ -192,7 +221,7 @@ class SiteController extends Controller
 
     public function actionRegister()
     {
-        if (!\Yii::$app->user->isGuest) {
+        if (!(Yii::$app->user->isGuest)) {
             return $this->goHome();
         }
 

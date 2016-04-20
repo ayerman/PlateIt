@@ -28,7 +28,7 @@ AppAsset::register($this);
     <?php
     NavBar::begin([
         'brandLabel' => 'PlateIt',
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandUrl' =>  Yii::$app->request->baseUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
