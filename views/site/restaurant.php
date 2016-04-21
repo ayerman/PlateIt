@@ -50,7 +50,8 @@ $this->title = 'PlateIt - Restaurant';
             <?php foreach($items as $item){?>
             <div class="col-md-4 portfolio-item">
                 <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x400" alt="">
+				<?php echo '<img class="img-responsive" src="'.base64_encode( $item->image ).'"/>'; ?>
+                    <!--<img class="img-responsive" src="http://placehold.it/700x400" alt="">-->
                 </a>
                 <h3>
                     <a href="/PlateIt/site/menuitem?id=<?php echo $item->id . '"'; ?>><?php  echo $item->name; ?></a>

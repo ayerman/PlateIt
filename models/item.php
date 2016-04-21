@@ -46,7 +46,7 @@ class item extends Model
         return [
             // username and password are both required
             [['name', 'description', 'userid','id'], 'required'],
-            ['image', 'safe'],
+            ['image', 'file', 'skipOnEmpty' => false],
         ];
     }
 
@@ -58,10 +58,12 @@ class item extends Model
             $pdo = DBConnectionHelper::getDBConnection();
             $sql = "INSERT INTO item(userid, name, description, image) VALUES (?,?,?,?);";
             $stmt = $pdo->prepare($sql);
+			$this->image = $_FILES['item']['tmp_name']['image'];
+			$image = addslashes(file_get_contents($this->image));
             $stmt->bindValue(1, $this->userid);
             $stmt->bindValue(2, $this->name);
             $stmt->bindValue(3, $this->description);
-            $stmt->bindValue(4, $this->image);
+            $stmt->bindValue(4, $image);
             $stmt->execute();
             return;
         }
