@@ -24,6 +24,7 @@ class item extends Model
     public $name;
     public $description;
     public $image;
+	public $imagetype;
 
     function __construct(){
 
@@ -36,6 +37,7 @@ class item extends Model
         $this->name = $record['name'];
         $this->description = $record['description'];
         $this->image = $record['image'];
+        $this->imagetype = $record['imagetype'];
     }
 
     /**
@@ -47,6 +49,7 @@ class item extends Model
             // username and password are both required
             [['name', 'description', 'userid','id'], 'required'],
             ['image', 'file', 'skipOnEmpty' => false],
+			['imagetype', 'safe'],
         ];
     }
 
@@ -56,14 +59,16 @@ class item extends Model
         try {
             //check if user exists
             $pdo = DBConnectionHelper::getDBConnection();
-            $sql = "INSERT INTO item(userid, name, description, image) VALUES (?,?,?,?);";
+            $sql = "INSERT INTO item(userid, name, description, image, imagetype) VALUES (?,?,?,?,?);";
             $stmt = $pdo->prepare($sql);
 			$this->image = $_FILES['item']['tmp_name']['image'];
-			$image = addslashes(file_get_contents($this->image));
+			$this->imagetype = $_FILES['item']['type']['image'];
+			$image = file_get_contents($this->image);
             $stmt->bindValue(1, $this->userid);
             $stmt->bindValue(2, $this->name);
             $stmt->bindValue(3, $this->description);
             $stmt->bindValue(4, $image);
+            $stmt->bindValue(5, $this->imagetype);
             $stmt->execute();
             return;
         }
