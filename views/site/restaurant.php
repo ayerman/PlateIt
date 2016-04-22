@@ -9,12 +9,13 @@ $this->title = 'PlateIt - Restaurant';
 
     <div class="jumbotron">
         <div class="row">
-            <div class="col-md-8">
-                <img class="img-responsive img-rounded" src="http://placehold.it/900x350" alt="">
+            <div class="col-md-6">
+                <?php header('Content-Type: ' . $retail->imagetype);?>
+				<?php echo '<img class="img-responsive" src="data:image/jpeg;base64,'. base64_encode( $retail->image ).'"/>'; ?>
             </div>
             <!-- /.col-md-8 -->
-            <div class="col-md-4">
-                <h1><?php echo $retail->name;?></h1>
+            <div class="col-md-6">
+				<h1><?php echo $retail->name;?></h1>
                 <p><?php echo $retail->description;?></p>
             </div>
             <!-- /.col-md-4 -->

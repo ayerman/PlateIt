@@ -53,7 +53,8 @@ $this->title = 'PlateIt - DashBoard';
             <?php foreach($model as $item){?>
             <div class="col-md-3 col-sm-6 hero-feature">
                 <div class="thumbnail">
-                    <img src="http://placehold.it/800x500" alt="">
+					<?php header('Content-Type: ' . $item->imagetype);?>
+					<?php echo '<img class="img-responsive" src="data:image/jpeg;base64,'. base64_encode( $item->image ).'"/>'; ?>
                     <div class="caption">
                         <h3><?php echo $item->name; ?></h3>
                         <p><?php echo $item->description; ?></p>

@@ -23,6 +23,7 @@ class retail extends Model
     public $name;
     public $description;
     public $image;
+	public $imagetype;
     public $address;
     public $email;
     public $phonenumber;
@@ -37,6 +38,7 @@ class retail extends Model
         $this->name = $record['name'];
         $this->description = $record['description'];
         $this->image = $record['image'];
+        $this->imagetype = $record['imagetype'];
         $this->address = $record['address'];
         $this->email = $record['email'];
         $this->phonenumber = $record['phonenumber'];
@@ -53,7 +55,7 @@ class retail extends Model
             ['description', 'safe'],
             ['image', 'safe'],
             ['address', 'safe'],
-            ['email', 'safe'],
+            [['email','imagetype'], 'safe'],
             ['phonenumber', 'safe'],
         ];
     }
@@ -62,8 +64,11 @@ class retail extends Model
         try {
             //check if user exists
             $pdo = DBConnectionHelper::getDBConnection();
-            $sql = "INSERT INTO retail(userid, name, description, image, address, email, phonenumber) VALUES (?,?,?,?,?,?,?);";
+            $sql = "INSERT INTO retail(userid, name, description, image, address, email, phonenumber, imagetype) VALUES (?,?,?,?,?,?,?,?);";
             $stmt = $pdo->prepare($sql);
+			$this->image = $_FILES['retail']['tmp_name']['image'];
+			$this->imagetype = $_FILES['retail']['type']['image'];
+			$image = file_get_contents($this->image);
             $stmt->bindValue(1, $this->userid);
             $stmt->bindValue(2, $this->name);
             $stmt->bindValue(3, $this->description);
@@ -71,6 +76,7 @@ class retail extends Model
             $stmt->bindValue(5, $this->address);
             $stmt->bindValue(6, $this->email);
             $stmt->bindValue(7, $this->phonenumber);
+            $stmt->bindValue(8, $this->imagetype);
             $stmt->execute();
             return;
         }
