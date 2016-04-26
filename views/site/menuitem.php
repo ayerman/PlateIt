@@ -3,6 +3,9 @@
 /* @var $this yii\web\View */
 
 $this->title = 'PlateIt - Menu Item';
+
+use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
 ?>
 
 <div class="site-index">
@@ -35,6 +38,50 @@ $this->title = 'PlateIt - Menu Item';
 		</div>
     </div>
     <!-- /.container -->
+
+
+
+
+
+
+
+<!---------------------------------------------------------------------------->
+<div id="comments">
+    ......
+    <h3>Leave a Comment</h3>
+ 
+    
+        <div class="flash-success">
+            
+        </div>
+    
+        <?php $this->renderPartial('/comment/_form',array(
+            'model'=>$comment,
+        )); ?>
+    
+ 
+</div><!-- comments -->
+
+
+<div class="form">
+ 
+<?php $form=$this->beginWidget('CActiveForm', array(
+    'id'=>'comment-form',
+    'enableAjaxValidation'=>true,
+)); ?>
+......
+<?php $this->endWidget(); ?>
+ 
+</div><!-- form -->
+
+
+<!-------------------------------------------------------------------------->
+
+
+
+
+
+
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
