@@ -65,77 +65,84 @@ class SiteController extends Controller
                 return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->identity->getId()));
             }
         }
-        return $this->render('index');
+        return $this->redirect('/PlateIt/site/dashboard');
     }
 	
 	public function actionMenuitem(){
         $this->validateLogin();
 		$model = new item();
         $loginUser = new LoginForm();
-        $loginUser->username = Yii::$app->user->identity->username;
-        $loginUser->getUserInfo();
-		$user = ['name' => $loginUser->username,'userid' => Yii::$app->user->getId()];
-		if($loginUser->usertype == "Retail"){
-			$loginUser = new retail();
-			$loginUser = getRetail(Yii::$app->user->getId());
-			$user = ['name' => $loginUser->name,'userid' => Yii::$app->user->getId()];
-		}
-        if(isset($_GET['id'])) {
-			$model = getItem(Yii::$app->request->get('id'));
-		}
-		
-		if(Yii::$app->request->isPost){
+		if(!Yii::$app->user->isGuest) {
+			$loginUser->username = Yii::$app->user->identity->username;
+			$loginUser->getUserInfo();
+			$user = ['name' => $loginUser->username,'userid' => Yii::$app->user->getId()];
+			if($loginUser->usertype == "Retail"){
+				$loginUser = new retail();
+				$loginUser = getRetail(Yii::$app->user->getId());
+				$user = ['name' => $loginUser->name,'userid' => Yii::$app->user->getId()];
+			}
+			if(isset($_GET['id'])) {
+				$model = getItem(Yii::$app->request->get('id'));
+			}
 			
+			if(Yii::$app->request->isPost){
+				
+			}
+			$comments = array();
+			return $this->render('menuitem', [
+				'item' => $model, 'comments' => $comments, 'user' => $user,
+			]);
 		}
-		$comments = array();
-        return $this->render('menuitem', [
-            'item' => $model, 'comments' => $comments, 'user' => $user,
-        ]);
+		return $this->redirect('/PlateIt/site/dashboard');
 	}
 
     public function actionAccountinfo(){
 		
         $this->validateLogin();
-        $model = new retail();
-        if(Yii::$app->request->isGet) {
-            $model = getRetail(Yii::$app->request->get('id'));
-        }
-        else {
-            if ($model->load(Yii::$app->request->post())) {
-                $model->userid = Yii::$app->user->getId();
-                if(updateRetail($model)){
-                    Yii::$app->session->setFlash('changeSuccess','You have successfully updated your retail account information');
-                }
-            }
-        }
-        return $this->render('accountinfo', [
-            'model' => $model,
-        ]);
+		if(!Yii::$app->user->isGuest) {
+			$model = new retail();
+			if(Yii::$app->request->isGet) {
+				$model = getRetail(Yii::$app->request->get('id'));
+			}
+			else {
+				if ($model->load(Yii::$app->request->post())) {
+					$model->userid = Yii::$app->user->getId();
+					if(updateRetail($model)){
+						Yii::$app->session->setFlash('changeSuccess','You have successfully updated your retail account information');
+					}
+				}
+			}
+			return $this->render('accountinfo', [
+				'model' => $model,
+			]);
+		}
     }
 	
 	public function actionUseraccount(){
 		
         $this->validateLogin();
-		$model = new LoginForm();
-        if(Yii::$app->request->isGet) {
-            $model->fromID(Yii::$app->request->get('id'));
-        }
-        else {
-            if ($model->load(Yii::$app->request->post())) {
-                if(updateUser($model,Yii::$app->user->getId())){
-					$model->fromID(Yii::$app->user->getId());
-					Yii::$app->user->logout();
-					$this->identifyUserType($model->usertype);
-					$model->login();
-                    Yii::$app->session->setFlash('changeSuccess','You have successfully updated your user account information!');
-                }else{
-					Yii::$app->session->setFlash('changeFail','The username selected currently exists!');
+		if(!Yii::$app->user->isGuest) {
+			$model = new LoginForm();
+			if(Yii::$app->request->isGet) {
+				$model->fromID(Yii::$app->request->get('id'));
+			}
+			else {
+				if ($model->load(Yii::$app->request->post())) {
+					if(updateUser($model,Yii::$app->user->getId())){
+						$model->fromID(Yii::$app->user->getId());
+						Yii::$app->user->logout();
+						$this->identifyUserType($model->usertype);
+						$model->login();
+						Yii::$app->session->setFlash('changeSuccess','You have successfully updated your user account information!');
+					}else{
+						Yii::$app->session->setFlash('changeFail','The username selected currently exists!');
+					}
 				}
-            }
-        }
-        return $this->render('useraccount', [
-            'model' => $model,
-        ]);
+			}
+			return $this->render('useraccount', [
+				'model' => $model,
+			]);
+		}
 	}
 
     public function actionLogin()
@@ -167,7 +174,6 @@ class SiteController extends Controller
 
     public function actionRestaurant()
     {
-        $this->validateLogin();
         if(Yii::$app->request->isGet) {
             $Retail = getRetail(Yii::$app->request->get("id"));
             $allItems = getItems($Retail->userid);
@@ -181,36 +187,39 @@ class SiteController extends Controller
 
         $model = new item();
 
-        //needs work
-        $user = new LoginForm();
-        $user->fromID(Yii::$app->user->identity->getId());
-        if($user->usertype == "Consumer") {
-            return $this->render('dashboard');
-        }
-
-        if(Yii::$app->request->isPost){
-            if ($model->load(Yii::$app->request->post())) {
-                $loginUser = Yii::$app->user->getIdentity();
-                $model->userid = $loginUser->getId();
-                $model->createItem();
-                return $this->redirect(array('/site/restaurant?id=' . $model->userid));
-            }
-            else{
-                return $this->goHome();
-            }
-        }
-        return $this->render('additem', [
-            'model' => $model,
-        ]);
+		if(!Yii::$app->user->isGuest) {
+			//needs work
+			$user = new LoginForm();
+			$user->fromID(Yii::$app->user->identity->getId());
+			if($user->usertype == "Consumer") {
+				return $this->render('dashboard');
+			}
+	
+			if(Yii::$app->request->isPost){
+				if ($model->load(Yii::$app->request->post())) {
+					$loginUser = Yii::$app->user->getIdentity();
+					$model->userid = $loginUser->getId();
+					$model->createItem();
+					return $this->redirect(array('/site/restaurant?id=' . $model->userid));
+				}
+				else{
+					return $this->goHome();
+				}
+			}
+			return $this->render('additem', [
+				'model' => $model,
+			]);
+		}
     }
 
     public function actionDashboard()
     {
-        $this->validateLogin();
 		$model = new LoginForm();
-        $model->username = Yii::$app->user->identity->username;
-		$model->getUserInfo();
-        if($model->usertype == "Consumer") {
+		if(!Yii::$app->user->isGuest) {
+			$model->username = Yii::$app->user->identity->username;
+			$model->getUserInfo();
+		}
+        if($model->usertype == "Consumer" || $model->usertype == "") {
             $allRetail = getAllRetail();
             return $this->render('dashboard', ['model' => $allRetail, 'loginUser' => $model]);
         }
@@ -260,9 +269,9 @@ class SiteController extends Controller
     }
 
     public function validateLogin(){
-        if(yii::$app->user->isGuest){
+        if(Yii::$app->user->isGuest){
             Yii::$app->session->removeAll();
-            return $this->goHome();
+            return $this->redirect('/PlateIt/site/dashboard');
         }
     }
 

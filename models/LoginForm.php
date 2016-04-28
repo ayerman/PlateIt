@@ -25,6 +25,12 @@ class LoginForm extends Model
 
     function __construct()
     {
+		$this->username = "";
+		$this->password = "";
+		$this->address = "";
+		$this->phonenumber = "";
+		$this->email = "";
+		$this->usertype = "";
     }
 
     public function fromID($id){
