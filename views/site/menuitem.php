@@ -35,7 +35,7 @@ function post()
 
 </script>
 
-<div class="site-index">
+<div class="site-index"  style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;">
 
     <div class="jumbotron">
         <div class="row">
@@ -68,13 +68,13 @@ function post()
 
 
 <!--------------------------------------------------------------------->
-<div class="well">
+<div class="well" style="text-align: center;">
   <form method='post' action="" onsubmit="return post();">
   <textarea id="comment" class="form-control" rows="3" placeholder="How was it?.... "></textarea>
   <br>
  <input type="hidden" id="username" value="<?php  ?>">
   <br>
-  <input type="submit" class="btn btn-primary" value="Post Comment">
+  <input type="submit" class="btn btn-secondary" style="" value="Tell Everyone!">
   </form>
 </div>
 
