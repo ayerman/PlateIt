@@ -93,13 +93,18 @@ class SiteController extends Controller
 				'item' => $model, 'comments' => $comments, 'user' => $user,
 			]);
 		}
-		return $this->redirect('/PlateIt/site/dashboard');
 	}
 
     public function actionAccountinfo(){
 		
         $this->validateLogin();
 		if(!Yii::$app->user->isGuest) {
+			if(Yii::$app->session['usertype'] == "Consumer"){
+				return $this->redirect('/PlateIt/site/dashboard');
+			}
+			if(null === Yii::$app->request->get('id')){
+				return $this->redirect(array('/site/dashboard'));
+			}
 			$model = new retail();
 			if(Yii::$app->request->isGet) {
 				$model = getRetail(Yii::$app->request->get('id'));
@@ -123,6 +128,9 @@ class SiteController extends Controller
         $this->validateLogin();
 		if(!Yii::$app->user->isGuest) {
 			$model = new LoginForm();
+			if(null === Yii::$app->request->get('id')){
+				return $this->redirect(array('/site/dashboard'));
+			}
 			if(Yii::$app->request->isGet) {
 				$model->fromID(Yii::$app->request->get('id'));
 			}
@@ -184,15 +192,13 @@ class SiteController extends Controller
 
     public function actionAdditem(){
         $this->validateLogin();
-
         $model = new item();
-
 		if(!Yii::$app->user->isGuest) {
 			//needs work
 			$user = new LoginForm();
 			$user->fromID(Yii::$app->user->identity->getId());
 			if($user->usertype == "Consumer") {
-				return $this->render('dashboard');
+				return $this->redirect(array('/site/dashboard'));
 			}
 	
 			if(Yii::$app->request->isPost){
