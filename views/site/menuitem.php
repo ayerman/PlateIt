@@ -67,7 +67,6 @@ function post()
     <!-- /.container -->
 
 
-<<<<<<< HEAD
 <!--------------------------------------------------------------------->
 <div class="well">
   <form method='post' action="" onsubmit="return post();">
@@ -110,50 +109,7 @@ function post()
     ?>
   </div>
 <!--------------------------------------------------------------------->
-=======
 
-
-
-
-
-<!---------------------------------------------------------------------------->
-<div id="comments">
-    ......
-    <h3>Leave a Comment</h3>
- 
-    
-        <div class="flash-success">
-            
-        </div>
-    
-        <?php $this->renderPartial('/comment/_form',array(
-            'model'=>$comment,
-        )); ?>
-    
- 
-</div><!-- comments -->
-
-
-<div class="form">
- 
-<?php $form=$this->beginWidget('CActiveForm', array(
-    'id'=>'comment-form',
-    'enableAjaxValidation'=>true,
-)); ?>
-......
-<?php $this->endWidget(); ?>
- 
-</div><!-- form -->
-
-
-<!-------------------------------------------------------------------------->
-
-
-
-
-
-
->>>>>>> origin/master
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
