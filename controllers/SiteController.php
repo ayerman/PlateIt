@@ -269,4 +269,6 @@ class SiteController extends Controller
     public function identifyUserType($type){
         Yii::$app->session['usertype'] = $type;
     }
+
+
 }
