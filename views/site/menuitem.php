@@ -13,21 +13,20 @@ use yii\bootstrap\ActiveForm;
 function post()
 {
   var comment = document.getElementById("comment").value;
-  var name = document.getElementById("username").value;
-  if(comment && name) {
+  var id = document.getElementById("userid").value;
+  if(comment && id) {
     $.ajax ({
-      type: 'post',
+      type: 'POST',
       url: 'post_comment.php',
       data: {
          user_comm:comment,
-	     user_name:name
+	     user_id:id
       },
       success: function (response) {
-	    document.getElementById("all_comments").innerHTML=response+document.getElementById("all_comments").innerHTML;
-	    document.getElementById("comment").value="";
-        document.getElementById("username").value="";
+		  
        }
     });
+	
   }
   
   return false;
@@ -54,16 +53,7 @@ function post()
 
     <div class="body-content">
  <!-- Page Content -->
-    <div class="container">
-        <div class="row">
-        <?php foreach($comments as $comment){?>
-            <div class="col-md-12">
-                <p><?php  echo $comment->user; ?></p>
-                <p><?php  echo $comment->description; ?></p>
-            </div>
-        <?php } ?>
-		</div>
-    </div>
+    
     <!-- /.container -->
 
 
@@ -72,7 +62,7 @@ function post()
   <form method='post' action="" onsubmit="return post();">
   <textarea id="comment" class="form-control" rows="3" placeholder="How was it?.... "></textarea>
   <br>
- <input type="hidden" id="username" value="<?php  ?>">
+ <input type="hidden" id="userid" value="<?php echo $user['userid']; ?>">
   <br>
   <input type="submit" class="btn btn-secondary" style="" value="Tell Everyone!">
   </form>
@@ -82,31 +72,14 @@ function post()
   <div id="all_comments">
 	
 	
-  <?php
-    $host="localhost";
-    $username="root";
-    $password="";
-    $databasename="sample";
-
-    $connect=mysql_connect($host,$username,$password);
-    $db=mysql_select_db($databasename);
-  
-    $comm = mysql_query("select name,comment,post_time from comments order by post_time desc");
-    while($row=mysql_fetch_array($comm)){
-	  $name=$row['name'];
-	  $comment=$row['comment'];
-      $time=$row['post_time'];
-    ?>
+  <?php foreach($reviews as $review) {?>
 	
 	<div class="comment_div"> 
-	  <p class="name"><?php echo $name;?> says:</p>
-      <p class="comment"><?php echo $comment;?></p>	
-	  <p class="time"><?php echo $time;?></p>
+	  <p class="name"><?php echo $review->username;?> says:</p>
+	  <p class="time"><?php echo $review->description;?></p>
 	</div>
   
-    <?php
-    }
-    ?>
+  <?php } ?>
   </div>
 <!--------------------------------------------------------------------->
 
