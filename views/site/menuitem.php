@@ -14,13 +14,15 @@ function post()
 {
   var comment = document.getElementById("comment").value;
   var id = document.getElementById("userid").value;
-  if(comment && id) {
+  var itid = document.getElementById("itemid").value;
+  if(comment && id && itid) {
     $.ajax ({
       type: 'POST',
       url: 'post_comment.php',
       data: {
          user_comm:comment,
-	     user_id:id
+	     user_id:id,
+		 item_id:itid
       },
       success: function (response) {
 		  
@@ -63,6 +65,9 @@ function post()
   <textarea id="comment" class="form-control" rows="3" placeholder="How was it?.... "></textarea>
   <br>
  <input type="hidden" id="userid" value="<?php echo $user['userid']; ?>">
+  <br>
+    <br>
+ <input type="hidden" id="itemid" value="<?php echo $item['id']; ?>">
   <br>
   <input type="submit" class="btn btn-secondary" style="" value="Tell Everyone!">
   </form>
