@@ -9,7 +9,11 @@ use yii\bootstrap\ActiveForm;
 ?>
 
 
-<script type="text/javascript" src="jquery.js">
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<script>
 function post()
 {
   var comment = document.getElementById("comment").value;
@@ -17,15 +21,16 @@ function post()
   var itid = document.getElementById("itemid").value;
   if(comment && id && itid) {
     $.ajax ({
-      type: 'POST',
-      url: 'post_comment.php',
+      type: 'post',
+      url: '<?php echo Yii::$app->request->baseUrl. '/site/addreview' ?>',
       data: {
          user_comm:comment,
 	     user_id:id,
-		 item_id:itid
+		 item_id:itid,
+          _csrf : '<?=Yii::$app->request->getCsrfToken()?>'
       },
       success: function (response) {
-		  
+          alert(response.comment);
        }
     });
 	
@@ -54,14 +59,7 @@ function post()
     </div>
 
     <div class="body-content">
- <!-- Page Content -->
-    
-    <!-- /.container -->
-
-
-<!--------------------------------------------------------------------->
 <div class="well" style="text-align: center;">
-  <form method='post' action="" onsubmit="return post();">
   <textarea id="comment" class="form-control" rows="3" placeholder="How was it?.... "></textarea>
   <br>
  <input type="hidden" id="userid" value="<?php echo $user['userid']; ?>">
@@ -69,8 +67,7 @@ function post()
     <br>
  <input type="hidden" id="itemid" value="<?php echo $item['id']; ?>">
   <br>
-  <input type="submit" class="btn btn-secondary" style="" value="Tell Everyone!">
-  </form>
+  <input type="submit" onclick="post()" class="btn btn-secondary" style="" value="Tell Everyone!">
 </div>
 
 
@@ -80,20 +77,12 @@ function post()
   <?php foreach($reviews as $review) {?>
 	
 	<div class="comment_div"> 
-	  <p class="name"><?php echo $review->username;?> says:</p>
-	  <p class="time"><?php echo $review->description;?></p>
+	  <p class="name"><?php echo $review->reviewer;?> says:</p>
+	  <p class="time"><?php echo $review->review;?></p>
 	</div>
   
   <?php } ?>
   </div>
-<!--------------------------------------------------------------------->
-
-
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
 
 
     </div>

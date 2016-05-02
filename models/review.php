@@ -66,6 +66,10 @@ class review extends Model
 		}
 	}
 
+    public function getUserFromReview(){
+        return "";
+    }
+
     /**
      * @return array the validation rules.
      */

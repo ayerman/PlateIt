@@ -14,6 +14,7 @@ use app\models\LoginForm;
 use app\models\item;
 use app\models\retail;
 use app\models\review;
+use app\models\reviewVM;
 use app\models\ContactForm;
 use yii\web\Session;
 
@@ -69,6 +70,20 @@ class SiteController extends Controller
         }
         return $this->redirect('/PlateIt/site/dashboard');
     }
+
+    public function actionAddreview()
+    {
+        $review = new review();
+        $review->userid = $_POST['user_id'];
+        $review->itemid = $_POST['item_id'];
+        $review->description = $_POST['user_comm'];
+        $review->createReview();
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return [
+            'comment' =>  $review->description,
+            'name' => $review->getUserFromReview(),
+        ];
+    }
 	
 	public function actionMenuitem(){
         $this->validateLogin();
@@ -78,21 +93,18 @@ class SiteController extends Controller
 			$loginUser->username = Yii::$app->user->identity->username;
 			$loginUser->getUserInfo();
 			$user = ['name' => $loginUser->username,'userid' => Yii::$app->user->getId()];
-			if($loginUser->usertype == "Retail"){
-				$loginUser = new retail();
-				$loginUser = getRetail(Yii::$app->user->getId());
-				$user = ['name' => $loginUser->name,'userid' => Yii::$app->user->getId()];
-			}
 			$reviews = array();
+            $reviewsVM = array();
 			if(isset($_GET['id'])) {
 				$model = getItem(Yii::$app->request->get('id'));
 				$reviews = getReviewsForItem(Yii::$app->request->get('id'));
+                foreach($reviews as $review){
+                    $reviewsVM[] = getReviewerForReview($review);
+                }
 			}
-			else if(Yii::$app->request->isPost){
-				
-			}
+
 			return $this->render('menuitem', [
-				'item' => $model, 'reviews' => $reviews, 'user' => $user,
+				'item' => $model, 'reviews' => $reviewsVM, 'user' => $user,
 			]);
 		}
 	}

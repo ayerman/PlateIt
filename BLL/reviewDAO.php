@@ -7,6 +7,9 @@
  */
 use \app\models\review;
 use \app\models\DBConnectionHelper;
+use \app\models\LoginForm;
+use \app\models\reviewVM;
+use \app\models\retail;
 
 
 function getReview($id){
@@ -19,6 +22,7 @@ function getReview($id){
         $stmt->execute();
         $row = $stmt->fetch();
 		$review = new review();
+        $review->fromRecord($row);
         return $review;
     }
     catch(\PDOException $ex){
@@ -34,17 +38,29 @@ function getReviewsForItem($itemid){
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $itemid);
         $stmt->execute();
-		$allReviews = array();
-        while($row = $stmt->fetch()){
-            $nextReview = new review();
-            $nextReview->fromRecord($row);
-            $allReviews[] = $nextReview;
-        }
-        return $allReviews;
+        $row = $stmt->fetch();
+        $review = new review();
+        $review->fromRecord($row);
+        return $review;
     }
     catch(\PDOException $ex){
         return $ex->getMessage();
     }
+}
+
+function getReviewerForReview($review){
+    $user = new LoginForm();
+    $user->fromID($review->userid);
+    $reviewVM = new reviewVM();
+    $reviewVM->review = $review->description;
+    if($user->usertype == "Retail"){
+        $retail = new retail();
+        $retail = getRetail($review->userid);
+        $reviewVM->reviewer = $retail->userid;
+    }else{
+        $reviewVM->reviewer = $user->username;
+    }
+    return $reviewVM;
 }
 
 ?>
