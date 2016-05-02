@@ -78,7 +78,7 @@ class SiteController extends Controller
 			$review->userid = $_POST['user_id'];
 			$review->itemid = $_POST['item_id'];
 			$review->description = $_POST['user_comm'];
-			//$review->createReview();
+			$review->createReview();
 			Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 			return [
 				'comment' =>  $review->description,
