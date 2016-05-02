@@ -38,10 +38,13 @@ function getReviewsForItem($itemid){
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $itemid);
         $stmt->execute();
-        $row = $stmt->fetch();
-        $review = new review();
-        $review->fromRecord($row);
-        return $review;
+ 	  $allReviews = array();
+        while($row = $stmt->fetch()){
+            $nextReview = new review();
+            $nextReview->fromRecord($row);
+            $allReviews[] = $nextReview;
+        }
+        return $allReviews;
     }
     catch(\PDOException $ex){
         return $ex->getMessage();
@@ -49,18 +52,24 @@ function getReviewsForItem($itemid){
 }
 
 function getReviewerForReview($review){
-    $user = new LoginForm();
-    $user->fromID($review->userid);
-    $reviewVM = new reviewVM();
-    $reviewVM->review = $review->description;
-    if($user->usertype == "Retail"){
-        $retail = new retail();
-        $retail = getRetail($review->userid);
-        $reviewVM->reviewer = $retail->userid;
-    }else{
-        $reviewVM->reviewer = $user->username;
-    }
-    return $reviewVM;
+	try{
+		$user = new LoginForm();
+		$user->fromID($review->userid);
+		$reviewVM = new reviewVM();
+		$reviewVM->review = $review->description;
+		$reviewVM->postedtime = $review->timeposted;
+		if($user->usertype == "Retail"){
+			$retail = new retail();
+			$retail = getRetail($review->userid);
+			$reviewVM->reviewer = $retail->name;
+		}else{
+			$reviewVM->reviewer = $user->username;
+		}
+		return $reviewVM;
+		}
+	catch(\PDOException $ex){
+         return $ex->getMessage();
+	}
 }
 
 ?>

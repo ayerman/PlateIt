@@ -12,6 +12,7 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\db\mssql\PDO;
+use \app\models\retail;
 require_once('DBConnectionHelper.php');
 
 /**
@@ -55,6 +56,7 @@ class review extends Model
         //check if user exists
         $pdo = DBConnectionHelper::getDBConnection();
         $sql = "INSERT INTO `review`(`timeposted`, `itemid`, `userid`, `description`) VALUES (NOW(),?,?,?)";
+		$this->timeposted = date("M-d-y h:i:s T");
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $this->itemid);
         $stmt->bindValue(2, $this->userid);
@@ -67,7 +69,15 @@ class review extends Model
 	}
 
     public function getUserFromReview(){
-        return "";
+		$user = new LoginForm();
+		$user->fromID($this->userid);
+		if($user->usertype == "Retail"){
+			$retail = new retail();
+			$retail = getRetail($this->userid);
+			return $retail->name;
+		}else{
+			return $user->username;
+		}
     }
 
     /**

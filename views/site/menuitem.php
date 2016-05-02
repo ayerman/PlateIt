@@ -30,8 +30,12 @@ function post()
           _csrf : '<?=Yii::$app->request->getCsrfToken()?>'
       },
       success: function (response) {
-          alert(response.comment);
-       }
+		  if(response.error == "true"){
+			  alert(response.comment);
+		  }else{
+			  $("#all_comments").prepend('<div class="well" style="padding: 0; margin:0;"><p class="name"><span style="color:blue;">' + response.name + '</span> said ' + response.timeposted + ':</p><p class="time">' + response.comment + '</p></div>');
+		  }
+      }
     });
 	
   }
@@ -76,8 +80,9 @@ function post()
 	
   <?php foreach($reviews as $review) {?>
 	
-	<div class="comment_div"> 
-	  <p class="name"><?php echo $review->reviewer;?> says:</p>
+	
+	<div class="well" style="padding: 0; margin:0;">
+	  <p class="name"><?php echo '<span style="color:blue;">'.$review->reviewer.'</span>';?><?php echo ' says at ' . date_format(date_create($review->postedtime),"M-d-y H:i:s") . ':';?></p>
 	  <p class="time"><?php echo $review->review;?></p>
 	</div>
   
@@ -85,5 +90,5 @@ function post()
   </div>
 
 
-    </div>
+  </div>
 </div>

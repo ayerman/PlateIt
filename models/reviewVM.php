@@ -13,4 +13,5 @@ class reviewVM
 {
     public $reviewer;
     public $review;
+	public $postedtime;
 }

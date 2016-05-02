@@ -73,40 +73,53 @@ class SiteController extends Controller
 
     public function actionAddreview()
     {
-        $review = new review();
-        $review->userid = $_POST['user_id'];
-        $review->itemid = $_POST['item_id'];
-        $review->description = $_POST['user_comm'];
-        $review->createReview();
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'comment' =>  $review->description,
-            'name' => $review->getUserFromReview(),
-        ];
+		if(!Yii::$app->user->isGuest) {
+			$review = new review();
+			$review->userid = $_POST['user_id'];
+			$review->itemid = $_POST['item_id'];
+			$review->description = $_POST['user_comm'];
+			//$review->createReview();
+			Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+			return [
+				'comment' =>  $review->description,
+				'name' => $review->getUserFromReview(),
+				'timeposted' => "just now",
+				'error' => "false",
+			];
+		}
+		else{
+			Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+			return [
+				'comment' =>  "Please login to review this item.",
+				'error' => "true",
+			];
+		}
     }
 	
 	public function actionMenuitem(){
-        $this->validateLogin();
 		$model = new item();
         $loginUser = new LoginForm();
-		if(!Yii::$app->user->isGuest) {
+		if(!Yii::$app->user->isGuest){
 			$loginUser->username = Yii::$app->user->identity->username;
 			$loginUser->getUserInfo();
 			$user = ['name' => $loginUser->username,'userid' => Yii::$app->user->getId()];
-			$reviews = array();
-            $reviewsVM = array();
-			if(isset($_GET['id'])) {
-				$model = getItem(Yii::$app->request->get('id'));
-				$reviews = getReviewsForItem(Yii::$app->request->get('id'));
-                foreach($reviews as $review){
-                    $reviewsVM[] = getReviewerForReview($review);
-                }
-			}
-
-			return $this->render('menuitem', [
-				'item' => $model, 'reviews' => $reviewsVM, 'user' => $user,
-			]);
+		}else{
+			
+			$user = ['name' => "Guest",'userid' => "0"];
 		}
+		$reviews = array();
+        $reviewsVM = array();
+		if(isset($_GET['id'])) {
+			$model = getItem(Yii::$app->request->get('id'));
+			$reviews = getReviewsForItem(Yii::$app->request->get('id'));
+               foreach($reviews as $review){
+                   $reviewsVM[] = getReviewerForReview($review);
+               }
+		}
+
+		return $this->render('menuitem', [
+			'item' => $model, 'reviews' => $reviewsVM, 'user' => $user,
+		]);
 	}
 
     public function actionAccountinfo(){
