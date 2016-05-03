@@ -63,12 +63,12 @@ class SiteController extends Controller
                 $this->identifyUserType($model->usertype);
             }
             if ($model->usertype == "Consumer") {
-                return $this->redirect('/PlateIt/site/dashboard');
+                return $this->redirect( Yii::$app->request->baseUrl . '/site/dashboard');
             } else if ($model->usertype == "Retail") {
                 return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->identity->getId()));
             }
         }
-        return $this->redirect('/PlateIt/site/dashboard');
+        return $this->redirect( Yii::$app->request->baseUrl . '/site/dashboard');
     }
 
     public function actionAddreview()

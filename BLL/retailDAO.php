@@ -50,19 +50,25 @@ function updateRetail($retail){
     try {
         //check if user exists
         $pdo = DBConnectionHelper::getDBConnection();
-        $sql = "UPDATE retail SET name=?,image=?,address=?,phonenumber=?,description=?,email=?,imagetype=? WHERE userid=?";
+        if(empty($_FILES['retail']['name']['image'])){
+            $sql = "UPDATE retail SET name=?,address=?,phonenumber=?,description=?,email=?,imagetype=? WHERE userid=?";
+        }else{
+            $sql = "UPDATE retail SET name=?,address=?,phonenumber=?,description=?,email=?,imagetype=?,image=? WHERE userid=?";
+        }
         $stmt = $pdo->prepare($sql);
 		$retail->image = $_FILES['retail']['tmp_name']['image'];
 		$retail->imagetype = $_FILES['retail']['type']['image'];
-		$image = file_get_contents($retail->image);
         $stmt->bindValue(1,$retail->name);
-        $stmt->bindValue(2,$image);
-        $stmt->bindValue(3,$retail->address);
-        $stmt->bindValue(4,$retail->phonenumber);
-        $stmt->bindValue(5,$retail->description);
-        $stmt->bindValue(6,$retail->email);
-        $stmt->bindValue(7,$retail->imagetype);
-        $stmt->bindValue(8,$retail->userid);
+        $stmt->bindValue(2,$retail->address);
+        $stmt->bindValue(3,$retail->phonenumber);
+        $stmt->bindValue(4,$retail->description);
+        $stmt->bindValue(5,$retail->email);
+        $stmt->bindValue(6,$retail->imagetype);
+        $stmt->bindValue(7,$retail->userid);
+        if(!empty($_FILES['retail']['name']['image'])){
+            $image = file_get_contents($retail->image);
+            $stmt->bindValue(8, $image);
+        }
         $stmt->execute();
         return true;
     }

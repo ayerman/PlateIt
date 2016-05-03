@@ -15,7 +15,7 @@ class DBConnectionHelper
 {
     public static function getDBConnection(){
 
-        //return new PDO(DBREMOTECONN, DBREMOTEUSER, DBREMOTEPASS);
-        return new PDO(DBLOCALCONN, DBLOCALUSER, DBLOCALPASS);
+        return new PDO(DBREMOTECONN, DBREMOTEUSER, DBREMOTEPASS);
+        //return new PDO(DBLOCALCONN, DBLOCALUSER, DBLOCALPASS);
     }
 }

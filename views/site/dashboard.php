@@ -59,7 +59,7 @@ $this->title = 'PlateIt - DashBoard';
                         <h3><?php echo $item->name; ?></h3>
                         <p><?php echo $item->description; ?></p>
                         <p>
-                            <a href="/PlateIt/site/restaurant?id=<?php echo $item->userid; ?>" class="btn btn-default">Learn More</a>
+                            <a href="<?php echo  Yii::$app->request->baseUrl;?>/site/restaurant?id=<?php echo $item->userid; ?>" class="btn btn-default">Learn More</a>
                         </p>
                     </div>
                 </div>

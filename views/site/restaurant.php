@@ -56,7 +56,7 @@ $this->title = 'PlateIt - Restaurant';
                     <!--<img class="img-responsive" src="http://placehold.it/700x400" alt="">-->
                 </a>
                 <h3>
-                    <a href="/PlateIt/site/menuitem?id=<?php echo $item->id . '"'; ?>><?php  echo $item->name; ?></a>
+                    <a href="<?php echo  Yii::$app->request->baseUrl;?>/site/menuitem?id=<?php echo $item->id . '"'; ?>><?php  echo $item->name; ?></a>
                 </h3>
                 <p><?php  echo $item->description; ?></p>
             </div>

@@ -64,19 +64,26 @@ class retail extends Model
         try {
             //check if user exists
             $pdo = DBConnectionHelper::getDBConnection();
-            $sql = "INSERT INTO retail(userid, name, description, image, address, email, phonenumber, imagetype) VALUES (?,?,?,?,?,?,?,?);";
+            if(!empty($_FILES['retail']['name']['image'])) {
+                $sql = "INSERT INTO retail(userid, name, description, address, email, phonenumber, imagetype, image) VALUES (?,?,?,?,?,?,?,?);";
+            }
+            else{
+                $sql = "INSERT INTO retail(userid, name, description, address, email, phonenumber, imagetype) VALUES (?,?,?,?,?,?,?);";
+            }
             $stmt = $pdo->prepare($sql);
-			$this->image = $_FILES['retail']['tmp_name']['image'];
-			$this->imagetype = $_FILES['retail']['type']['image'];
-			$image = file_get_contents($this->image);
             $stmt->bindValue(1, $this->userid);
             $stmt->bindValue(2, $this->name);
             $stmt->bindValue(3, $this->description);
-            $stmt->bindValue(4, $this->image);
-            $stmt->bindValue(5, $this->address);
-            $stmt->bindValue(6, $this->email);
-            $stmt->bindValue(7, $this->phonenumber);
-            $stmt->bindValue(8, $this->imagetype);
+            $stmt->bindValue(4, $this->address);
+            $stmt->bindValue(5, $this->email);
+            $stmt->bindValue(6, $this->phonenumber);
+            $stmt->bindValue(7, $this->imagetype);
+            if(!empty($_FILES['retail']['name']['image'])) {
+                $this->image = $_FILES['retail']['tmp_name']['image'];
+                $this->imagetype = $_FILES['retail']['type']['image'];
+                $image = file_get_contents($this->image);
+                $stmt->bindValue(8, $this->image);
+            }
             $stmt->execute();
             return;
         }
