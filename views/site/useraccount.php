@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php echo Yii::$app->session->getFlash('changeFail');?>
         </div>
     <?php endif; ?>
+    <p>Changing this information will change your login account information</p>
     <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
     <?= $form->field($model, 'password')->passwordInput() ?>

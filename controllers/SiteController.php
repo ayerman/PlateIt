@@ -196,7 +196,7 @@ class SiteController extends Controller
 						return $this->redirect(array('/site/dashboard'));
 					}
 					else if($model->usertype == "Retail"){
-						return $this->redirect(array('/site/restaurant?id=' . $model->getUser()->getId()));
+                        return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->getId()));
 					}
                 }
             }
@@ -230,8 +230,7 @@ class SiteController extends Controller
 	
 			if(Yii::$app->request->isPost){
 				if ($model->load(Yii::$app->request->post())) {
-					$loginUser = Yii::$app->user->getIdentity();
-					$model->userid = $loginUser->getId();
+					$model->userid = Yii::$app->user->identity->getId();
 					$model->createItem();
 					return $this->redirect(array('/site/restaurant?id=' . $model->userid));
 				}
@@ -283,7 +282,8 @@ class SiteController extends Controller
                     $newRetail->email = $model->email;
                     $newRetail->phonenumber = $model->phonenumber;
                     $newRetail->createRetail();
-                    return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->getId()));
+                    Yii::$app->session->setFlash('newAccount','Now please edit your retail information!');
+                    return $this->redirect(array('/site/accountinfo?id=' . $model->getUser()->getId()));
                 }
             }
 			Yii::$app->session->setFlash('userExists', "The username that you selected already exists.");

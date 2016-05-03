@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Retail Account Information';
+$this->title = 'Retail Information';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
@@ -26,6 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php echo Yii::$app->session->getFlash('changeSuccess');?>
         </div>
     <?php endif; ?>
+    <?php if(Yii::$app->session->hasFlash('newAccount')):?>
+        <div class="alert alert-success">
+            <?php echo Yii::$app->session->getFlash('newAccount');?>
+        </div>
+    <?php endif; ?>
+    <p>This information is for the retail information and not your login account.</p>
     <?= $form->field($model, 'name')->textInput(['autofocus' => true]) ?>
 
     <?= $form->field($model, 'description')->textInput() ?>
