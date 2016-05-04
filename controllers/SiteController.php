@@ -55,13 +55,10 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+		$this->identifyUserType();
         if(!Yii::$app->user->isGuest) {
             $model = new LoginForm();
-            $model->username = Yii::$app->user->identity->username;
-            $model->getUserInfo();
-            if(!isset(Yii::$app->session['usertype'])){
-                $this->identifyUserType($model->usertype);
-            }
+            $model->fromID(Yii::$app->user->identity->getId());
             if ($model->usertype == "Consumer") {
                 return $this->redirect( Yii::$app->request->baseUrl . '/site/dashboard');
             } else if ($model->usertype == "Retail") {
@@ -73,6 +70,7 @@ class SiteController extends Controller
 
     public function actionAddreview()
     {
+		$this->identifyUserType();
 		if(!Yii::$app->user->isGuest) {
 			$review = new review();
 			$review->userid = $_POST['user_id'];
@@ -97,12 +95,12 @@ class SiteController extends Controller
     }
 	
 	public function actionMenuitem(){
+		$this->identifyUserType();
 		$model = new item();
         $loginUser = new LoginForm();
 		if(!Yii::$app->user->isGuest){
-			$loginUser->username = Yii::$app->user->identity->username;
-			$loginUser->getUserInfo();
-			$user = ['name' => $loginUser->username,'userid' => Yii::$app->user->getId()];
+			$loginUser->fromID(Yii::$app->user->identity->getId());
+			$user = ['name' => $loginUser->username,'userid' => Yii::$app->user->identity->getId()];
 		}else{
 			
 			$user = ['name' => "Guest",'userid' => "0"];
@@ -125,7 +123,7 @@ class SiteController extends Controller
 	}
 
     public function actionAccountinfo(){
-		
+		$this->identifyUserType();
         $this->validateLogin();
 		if(!Yii::$app->user->isGuest) {
 			if(Yii::$app->session['usertype'] == "Consumer"){
@@ -153,7 +151,7 @@ class SiteController extends Controller
     }
 	
 	public function actionUseraccount(){
-		
+		$this->identifyUserType();
         $this->validateLogin();
 		if(!Yii::$app->user->isGuest) {
 			$model = new LoginForm();
@@ -165,11 +163,11 @@ class SiteController extends Controller
 			}
 			else {
 				if ($model->load(Yii::$app->request->post())) {
-					if(updateUser($model,Yii::$app->user->getId())){
-						$model->fromID(Yii::$app->user->getId());
+					if(updateUser($model,Yii::$app->user->identity->getId())){
+						$model->fromID(Yii::$app->user->identity->getId());
 						Yii::$app->user->logout();
-						$this->identifyUserType($model->usertype);
 						$model->login();
+						$this->identifyUserType();
 						Yii::$app->session->setFlash('changeSuccess','You have successfully updated your user account information!');
 					}else{
 						Yii::$app->session->setFlash('changeFail','The username selected currently exists!');
@@ -192,13 +190,13 @@ class SiteController extends Controller
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['isLogin'])) {
                 if ($model->load(Yii::$app->request->post()) && $model->login()) {
-					$model->getUserInfo();
-                    $this->identifyUserType($model->usertype);
+					$model->fromID(Yii::$app->user->identity->getId());
+					$this->identifyUserType();
 					if($model->usertype == "Consumer") {
 						return $this->redirect(array('/site/dashboard'));
 					}
 					else if($model->usertype == "Retail"){
-                        return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->getId()));
+                        return $this->redirect(array('/site/restaurant?id=' . Yii::$app->user->identity->getId()));
 					}
                 }
             }
@@ -211,6 +209,7 @@ class SiteController extends Controller
 
     public function actionRestaurant()
     {
+		$this->identifyUserType();
 		if(null === Yii::$app->request->get('id')){
 			return $this->redirect(array('/site/dashboard'));
 		}
@@ -223,6 +222,7 @@ class SiteController extends Controller
     }
 
     public function actionAdditem(){
+		$this->identifyUserType();
         $this->validateLogin();
         $model = new item();
 		if(!Yii::$app->user->isGuest) {
@@ -250,10 +250,10 @@ class SiteController extends Controller
 
     public function actionDashboard()
     {
+		$this->identifyUserType();
 		$model = new LoginForm();
 		if(!Yii::$app->user->isGuest) {
-			$model->username = Yii::$app->user->identity->username;
-			$model->getUserInfo();
+			$model->fromID(Yii::$app->user->identity->getId());
 		}
         if($model->usertype == "Consumer" || $model->usertype == "") {
             $allRetail = getAllRetail();
@@ -266,6 +266,7 @@ class SiteController extends Controller
 
     public function actionRegister()
     {
+		$this->identifyUserType();
         if (!(Yii::$app->user->isGuest)) {
             return $this->goHome();
         }
@@ -280,7 +281,7 @@ class SiteController extends Controller
                 }
                 else if($model->usertype == "Retail"){
                     $newRetail = new retail();
-                    $newRetail->userid = Yii::$app->user->getId();
+                    $newRetail->userid = Yii::$app->user->identity->getId();
                     $newRetail->name = $model->username;
                     $newRetail->address = $model->address;
                     $newRetail->email = $model->email;
@@ -312,8 +313,14 @@ class SiteController extends Controller
         }
     }
 
-    public function identifyUserType($type){
-        Yii::$app->session['usertype'] = $type;
+    public function identifyUserType(){
+        if(!Yii::$app->user->isGuest){
+			$model = new LoginForm();
+			$model->fromID(Yii::$app->user->identity->getId());
+			if(!isset(Yii::$app->session['usertype'])){
+				Yii::$app->session['usertype'] = $model->usertype;
+			}
+		}
     }
 
 }
