@@ -50,6 +50,7 @@ function updateRetail($retail){
     try {
         //check if user exists
         $pdo = DBConnectionHelper::getDBConnection();
+		$sql = "";
         if(empty($_FILES['retail']['name']['image'])){
             $sql = "UPDATE retail SET name=?,address=?,phonenumber=?,description=?,email=?,imagetype=? WHERE userid=?";
         }else{
@@ -64,11 +65,13 @@ function updateRetail($retail){
         $stmt->bindValue(4,$retail->description);
         $stmt->bindValue(5,$retail->email);
         $stmt->bindValue(6,$retail->imagetype);
-        $stmt->bindValue(7,$retail->userid);
         if(!empty($_FILES['retail']['name']['image'])){
             $image = file_get_contents($retail->image);
-            $stmt->bindValue(8, $image);
-        }
+            $stmt->bindValue(7, $image);
+			$stmt->bindValue(8,$retail->userid);
+        }else{
+			$stmt->bindValue(7,$retail->userid);
+		}
         $stmt->execute();
         return true;
     }

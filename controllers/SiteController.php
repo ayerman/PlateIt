@@ -115,6 +115,8 @@ class SiteController extends Controller
                foreach($reviews as $review){
                    $reviewsVM[] = getReviewerForReview($review);
                }
+		}else{
+			return $this->redirect(array('/site/dashboard'));
 		}
 
 		return $this->render('menuitem', [
@@ -127,18 +129,18 @@ class SiteController extends Controller
         $this->validateLogin();
 		if(!Yii::$app->user->isGuest) {
 			if(Yii::$app->session['usertype'] == "Consumer"){
-				return $this->redirect('/PlateIt/site/dashboard');
-			}
-			if(null === Yii::$app->request->get('id')){
-				return $this->redirect(array('/site/dashboard'));
+				return $this->redirect(Yii::$app->request->baseUrl . '/site/dashboard');
 			}
 			$model = new retail();
 			if(Yii::$app->request->isGet) {
+				if(null === Yii::$app->request->get('id')){
+					return $this->redirect(Yii::$app->request->baseUrl . '/site/dashboard');
+				}
 				$model = getRetail(Yii::$app->request->get('id'));
 			}
 			else {
 				if ($model->load(Yii::$app->request->post())) {
-					$model->userid = Yii::$app->user->getId();
+					$model->userid = Yii::$app->user->identity->getId();
 					if(updateRetail($model)){
 						Yii::$app->session->setFlash('changeSuccess','You have successfully updated your retail account information');
 					}
@@ -209,6 +211,9 @@ class SiteController extends Controller
 
     public function actionRestaurant()
     {
+		if(null === Yii::$app->request->get('id')){
+			return $this->redirect(array('/site/dashboard'));
+		}
         if(Yii::$app->request->isGet) {
             $Retail = getRetail(Yii::$app->request->get("id"));
             $allItems = getItems($Retail->userid);
@@ -221,7 +226,6 @@ class SiteController extends Controller
         $this->validateLogin();
         $model = new item();
 		if(!Yii::$app->user->isGuest) {
-			//needs work
 			$user = new LoginForm();
 			$user->fromID(Yii::$app->user->identity->getId());
 			if($user->usertype == "Consumer") {
@@ -272,7 +276,7 @@ class SiteController extends Controller
                 $model->login();
                 $this->identifyUserType($model->usertype);
                 if($model->usertype == "Consumer") {
-                    return $this->redirect(array('/site/dashboard'));
+                    return $this->redirect(array(Yii::$app->request->baseUrl . '/site/dashboard'));
                 }
                 else if($model->usertype == "Retail"){
                     $newRetail = new retail();
@@ -304,7 +308,7 @@ class SiteController extends Controller
     public function validateLogin(){
         if(Yii::$app->user->isGuest){
             Yii::$app->session->removeAll();
-            return $this->redirect('/PlateIt/site/dashboard');
+            return $this->redirect(Yii::$app->request->baseUrl . '/site/dashboard');
         }
     }
 

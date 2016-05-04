@@ -48,8 +48,8 @@ class item extends Model
         return [
             // username and password are both required
             [['name', 'description', 'userid','id'], 'required'],
-            ['image', 'file', 'skipOnEmpty' => false],
 			['imagetype', 'safe'],
+			['image', 'safe'],
         ];
     }
 
@@ -59,16 +59,22 @@ class item extends Model
         try {
             //check if user exists
             $pdo = DBConnectionHelper::getDBConnection();
-            $sql = "INSERT INTO item(userid, name, description, image, imagetype) VALUES (?,?,?,?,?);";
+			if(empty($_FILES['item']['name']['image'])){
+				$sql = "INSERT INTO item(userid, name, description) VALUES (?,?,?);";
+			}else{
+				$sql = "INSERT INTO item(userid, name, description, image, imagetype) VALUES (?,?,?,?,?);";
+			}
             $stmt = $pdo->prepare($sql);
-			$this->image = $_FILES['item']['tmp_name']['image'];
-			$this->imagetype = $_FILES['item']['type']['image'];
-			$image = file_get_contents($this->image);
             $stmt->bindValue(1, $this->userid);
             $stmt->bindValue(2, $this->name);
             $stmt->bindValue(3, $this->description);
-            $stmt->bindValue(4, $image);
-            $stmt->bindValue(5, $this->imagetype);
+			if(!empty($_FILES['item']['name']['image'])){
+				$this->image = $_FILES['item']['tmp_name']['image'];
+				$this->imagetype = $_FILES['item']['type']['image'];
+				$image = file_get_contents($this->image);
+				$stmt->bindValue(4, $image);
+				$stmt->bindValue(5, $this->imagetype);
+			}
             $stmt->execute();
             return;
         }
