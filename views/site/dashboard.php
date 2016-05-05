@@ -51,7 +51,7 @@ $this->title = 'PlateIt - DashBoard';
         <!-- Page Features -->
         <div class="row text-center">
             <?php foreach($model as $item){?>
-            <div class="col-md-3 col-sm-6 hero-feature">
+            <div class="col-md-3 hero-feature">
                 <div class="thumbnail">
 					<?php header('Content-Type: ' . $item->imagetype);?>
 					<?php echo '<img class="img-responsive" src="data:image/jpeg;base64,'. base64_encode( $item->image ).'"/>'; ?>

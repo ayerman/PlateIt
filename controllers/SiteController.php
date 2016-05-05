@@ -150,7 +150,22 @@ class SiteController extends Controller
 		}
     }
 	
+	public function actionDeleteaccount(){
+		if(!Yii::$app->user->isGuest) {
+			deleteUser();
+			deleteItems();
+			deleteReviews();
+			deleteRetail();
+			Yii::$app->user->logout();
+			Yii::$app->session->removeAll();
+		}
+		return $this->goHome();
+	}
+	
 	public function actionUseraccount(){
+		if(isset($_POST['delete'])){
+			return $this->redirect(array('/site/deleteaccount'));
+		}
 		$this->identifyUserType();
         $this->validateLogin();
 		if(!Yii::$app->user->isGuest) {

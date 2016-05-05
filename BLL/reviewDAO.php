@@ -30,6 +30,21 @@ function getReview($id){
     }
 }
 
+function deleteReviews(){
+	try {
+        //check if user exists
+        $pdo = DBConnectionHelper::getDBConnection();
+        $sql = "DELETE FROM review WHERE userid=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1,Yii::$app->user->identity->getId());
+        $stmt->execute();
+        return true;
+    }
+    catch(\PDOException $ex){
+        return $ex->getMessage();
+    }
+}
+
 function getReviewsForItem($itemid){
     try {
         //check if user exists

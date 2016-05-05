@@ -44,7 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <div class="form-group">
-        <div class="col-lg-offset-1 col-lg-11">
+        <div class="col-lg-2">
+            <?= Html::submitButton('Delete Account', ['class' => 'btn btn-danger', 'name' => 'delete', 'onclick'=>'return confirm("are you sure?")']) ?>
+        </div>
+        <div class="col-lg-offset-1 col-lg-1">
             <?= Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' => 'account-button']) ?>
         </div>
     </div>

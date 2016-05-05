@@ -28,6 +28,21 @@ function getAllRetail(){
     }
 }
 
+function deleteRetail(){
+	try {
+        //check if user exists
+        $pdo = DBConnectionHelper::getDBConnection();
+        $sql = "DELETE FROM retail WHERE userid=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1,Yii::$app->user->identity->getId());
+        $stmt->execute();
+        return true;
+    }
+    catch(\PDOException $ex){
+        return $ex->getMessage();
+    }
+}
+
 function getRetail($id){
     try {
         //check if user exists

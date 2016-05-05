@@ -5,6 +5,7 @@
  * Date: 4/4/2016
  * Time: 7:58 PM
  */
+
 use \app\models\LoginForm;
 use \app\models\DBConnectionHelper;
 
@@ -32,6 +33,21 @@ function isUserTaken($username){
 		}else{
 			return false;
 		}
+    }
+    catch(\PDOException $ex){
+        return $ex->getMessage();
+    }
+}
+
+function deleteUser(){
+	try {
+        //check if user exists
+        $pdo = DBConnectionHelper::getDBConnection();
+        $sql = "DELETE FROM users WHERE id=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1,Yii::$app->user->identity->getId());
+        $stmt->execute();
+        return true;
     }
     catch(\PDOException $ex){
         return $ex->getMessage();
